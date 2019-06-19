@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 
+
+###############################################
+#
+# Declare constants
+#
+###############################################
+
 #
 # Name of the CloudFormation stack we want to create
 stackName=udagram-stack
 
 #
 # YAML script we'll use to declare the networking resources of our stack
-templateFile=file://yaml/network.yaml
+templateFile=file://templates/network.yaml
 
 #
 # JSON script we'll use to pass parameters to our networking script
-parameterFile=file://yaml/network-params.json
+parameterFile=file://templates/network-params.json
 
+
+###############################################
+#
+# Create the cloud formation
+#
+###############################################
 create_formation()
 {
     aws cloudformation create-stack \
@@ -20,6 +33,12 @@ create_formation()
         --parameters ${parameterFile}
 }
 
+
+###############################################
+#
+# Update the cloud formation
+#
+###############################################
 update_formation()
 {
     aws cloudformation update-stack \
@@ -28,17 +47,35 @@ update_formation()
         --parameters ${parameterFile}
 }
 
+
+###############################################
+#
+# Delete the cloud formation
+#
+###############################################
 delete_formation()
 {
     aws cloudformation delete-stack \
         --stack-name ${stackName}
 }
 
+
+###############################################
+#
+# Display script usage
+#
+###############################################
 usage()
 {
     echo "usage: build.sh [[-c | --create] | [-u | --update] | [-d | --delete] | [-h | --help]]"
 }
 
+
+###############################################
+#
+# Parse and handle the input parameters
+#
+###############################################
 while [[ "$1" != "" ]]; do
     case $1 in
         -c | --create )         create_formation
