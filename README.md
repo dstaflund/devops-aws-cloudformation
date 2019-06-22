@@ -1,5 +1,6 @@
 ## AWS CloudFormation Project    
 
+### Requirements ###
 
 **Server specs**
 
@@ -44,3 +45,44 @@
 - The script should make judicious use of parameters
 
 
+### Instructions
+
+To create the AWS CloudFormation stacks, do the following:
+
+1.  Create an AWS account
+1.  Download and install AWS Command Line Interface from https://aws.amazon.com/cli/
+1.  Open a command prompt and go to the top-level directory of this repository
+1.  Run the following (NB:  Only Linux syntax is provided here -- modify for Windows):
+
+```
+    #
+    # Note that you can use '-c' instead of '--create-stack' in the following
+    #
+    
+    > cd scripts
+    > cd ./service
+    > ./build.sh --create-stack      # Create the S3 bucket and associated role
+    > cd ../network
+    > ./build.sh --create-stack      # Create the underlying network resources
+    > cd ../server
+    > ./build.sh --create-stack      # Create the instances and deploy the app
+```
+
+To delete the AWS CloudFormation stacks when you are finished, do the following:
+
+1.  Open a command prompt and go to the top-level directory of this repository
+1.  Run the following (NB:  Only Linux syntax is provided here -- modify for Windows):
+
+```
+    #
+    # Note that you can use '-d' instead of '--delete-stack' in the following
+    #
+    
+    > cd scripts
+    > cd ./server
+    > ./build.sh --delete-stack      # Delete the instances
+    > cd ../network
+    > ./build.sh --delete-stack      # Delete the underlying network resources
+    > cd ../service
+    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+```
