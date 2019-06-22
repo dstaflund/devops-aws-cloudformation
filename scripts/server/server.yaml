@@ -47,3 +47,27 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
+
+  WebLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          # Install docker
+          apt-get update
+          apt-get install -y apt-transport-https ca-certificates curl ...
+          ...
+          apt-get update
+          apt-get install -y docker-ce
+          usermod -aG docker ubuntu
+          docker run -p 8080:8080 tomcat:8.0
+      ImageId: ami-005bdb005fb00e791
+      KeyName: that-one
+      SecurityGroups:
+        - Ref: WebServerSecGroup
+      InstanceType: t3.medium
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '10'

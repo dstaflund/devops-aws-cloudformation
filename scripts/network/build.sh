@@ -7,8 +7,8 @@
 #
 ###############################################
 stackName=udagram-network-stack
-networkTemplateFile=file://network.yaml
-networkParameterFile=file://network.json
+templateFile=file://network.yaml
+parameterFile=file://network.json
 
 
 ###############################################
@@ -20,8 +20,8 @@ create_stack()
 {
     aws cloudformation create-stack \
         --stack-name ${stackName} \
-        --template-body ${networkTemplateFile} \
-        --parameters ${networkParameterFile}
+        --template-body ${templateFile} \
+        --parameters ${parameterFile}
 }
 
 
@@ -34,8 +34,8 @@ update_stack()
 {
     aws cloudformation update-stack \
         --stack-name ${stackName} \
-        --template-body ${networkTemplateFile} \
-        --parameters ${networkParameterFile}
+        --template-body ${templateFile} \
+        --parameters ${parameterFile}
 }
 
 

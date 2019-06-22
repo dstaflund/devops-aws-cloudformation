@@ -7,8 +7,8 @@
 #
 ###############################################
 stackName=udagram-server-stack
-serverTemplateFile=file://server.yaml
-serverParameterFile=file://server.json
+templateFile=file://server.yaml
+parameterFile=file://server.json
 
 
 ###############################################
@@ -20,8 +20,8 @@ create_stack()
 {
     aws cloudformation create-stack \
         --stack-name ${stackName} \
-        --template-body ${serverTemplateFile} \
-        --parameters ${serverParameterFile}
+        --template-body ${templateFile} \
+        --parameters ${parameterFile}
 }
 
 
@@ -34,8 +34,8 @@ update_stack()
 {
     aws cloudformation update-stack \
         --stack-name ${stackName} \
-        --template-body ${serverTemplateFile} \
-        --parameters ${serverParameterFile}
+        --template-body ${templateFile} \
+        --parameters ${parameterFile}
 }
 
 
