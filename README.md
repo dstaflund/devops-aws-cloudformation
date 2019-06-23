@@ -90,3 +90,4 @@ To delete the AWS CloudFormation stacks when you are finished, do the following:
 ### Acknowledgments
 
 - Strategy used to perform S3 file uploads is an adaptation of code found at https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
+- Used https://www.browserling.com/tools/file-to-base64 to encode the warfile
