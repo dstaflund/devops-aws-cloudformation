@@ -51,6 +51,11 @@ delete_stack()
 }
 
 
+###############################################
+#
+# Display script usage
+#
+###############################################
 usage()
 {
     echo "usage: build.sh [[-c | --create-stack] | [-u | -- update-stack] | [-d | --delete-stack] | [-h | --help]]"

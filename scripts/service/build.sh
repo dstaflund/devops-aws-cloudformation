@@ -53,6 +53,11 @@ delete_stack()
 }
 
 
+###############################################
+#
+# Display script usage
+#
+###############################################
 usage()
 {
     echo "usage: build.sh [[-c | --create-stack] | [-u | -- update-stack] | [-d | --delete-stack] | [-h | --help]]"
@@ -66,23 +71,23 @@ usage()
 ###############################################
 while [[ "$1" != "" ]]; do
     case $1 in
-        -c | --create-stack )    echo "creating stack..."
-                                 create_stack
-                                 echo "done"
-                                 exit
-                                 ;;
-        -u | --update-stack )    echo "updating stack..."
-                                 update_stack
-                                 echo "done"
-                                 exit
-                                 ;;
-        -d | --delete-stack )    echo "deleting stack..."
-                                 delete_stack
-                                 echo "done"
-                                 exit
-                                 ;;
-        -h | --help )            usage
-                                 exit 1
+        -c | --create-stack )      echo "creating stack..."
+                                   create_stack
+                                   echo "done"
+                                   exit
+                                   ;;
+        -u | --update-stack )      echo "updating stack..."
+                                   update_stack
+                                   echo "done"
+                                   exit
+                                   ;;
+        -d | --delete-stack )      echo "deleting stack..."
+                                   delete_stack
+                                   echo "done"
+                                   exit
+                                   ;;
+        -h | --help )              usage
+                                   exit 1
     esac
     shift
 done

@@ -86,3 +86,7 @@ To delete the AWS CloudFormation stacks when you are finished, do the following:
     > cd ../service
     > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
 ```
+
+### Acknowledgments
+
+- Strategy used to perform S3 file uploads is an adaptation of code found at https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects

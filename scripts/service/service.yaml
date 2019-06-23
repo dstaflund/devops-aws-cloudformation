@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  An AWS CloudFormation template describing the Udagram service stack
+  An AWS CloudFormation template describing the Udagram service stack.
 
 Parameters:
   EnvironmentName:
@@ -38,3 +38,10 @@ Resources:
                 Effect: Allow
                 Action: [ "s3:Get*", "s3:List*" ]
                 Resource: "*"
+
+Outputs:
+  S3Bucket:
+    Description: A reference to the created VPC
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub ${EnvironmentName}-s3-bucket
