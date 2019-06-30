@@ -19,6 +19,7 @@ parameterFile=file://server.json
 create_stack()
 {
     aws cloudformation create-stack \
+        --capabilities CAPABILITY_IAM \
         --stack-name ${stackName} \
         --template-body ${templateFile} \
         --parameters ${parameterFile}
@@ -33,6 +34,7 @@ create_stack()
 update_stack()
 {
     aws cloudformation update-stack \
+        --capabilities CAPABILITY_IAM \
         --stack-name ${stackName} \
         --template-body ${templateFile} \
         --parameters ${parameterFile}

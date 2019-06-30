@@ -45,3 +45,9 @@ Outputs:
     Value: !Ref S3Bucket
     Export:
       Name: !Sub ${EnvironmentName}-s3-bucket
+
+  S3FileReader:
+    Description: A reference to the created IAM role
+    Value: !Ref S3FileReader
+    Export:
+      Name: !Sub ${EnvironmentName}-s3-file-reader

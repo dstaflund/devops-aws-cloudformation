@@ -15,7 +15,7 @@ Resources:
       GroupDescription: Allow TCP calls on port 80 to our hosts and SSH from local only
       VpcId:
         Fn::ImportValue:
-          !Sub "${EnvironmentName}-VPCID"
+          !Sub ${EnvironmentName}-VPCID
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -30,6 +30,13 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
+
+  WebAppInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - Fn::ImportValue:
+            !Sub ${EnvironmentName}-s3-file-reader
 
   WebAppLaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -48,6 +55,7 @@ Resources:
       SecurityGroups:
         - Ref: WebServerSecGroup
       InstanceType: t2.medium
+      IamInstanceProfile: !Ref WebAppInstanceProfile
       BlockDeviceMappings:
         - DeviceName: "/dev/sdk"
           Ebs:
@@ -133,3 +141,10 @@ Resources:
           Values: [/]
       ListenerArn: !Ref 'Listener'
       Priority: 1
+
+Outputs:
+  LoadBalancerDNSName:
+    Description: Public address of load balancer
+    Value: !Join [ "",  [ "http://", !GetAtt WebAppLB.DNSName ]]
+    Export:
+      Name: !Sub ${EnvironmentName}-LoadBalancerDNSName
