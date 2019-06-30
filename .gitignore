@@ -1,3 +1,4 @@
 /.idea
 *.iml
 **/s3objects.template
+**/packaged.yaml
