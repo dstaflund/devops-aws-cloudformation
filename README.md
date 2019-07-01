@@ -98,7 +98,7 @@ Note that the zip-file contains a single _index.html_ file that display the phra
 
 This stack takes the following input parameters:
 
-![Alt text](/doc/service_test_input.jpg?raw=true "Test Stack Input Parameters")
+![Alt text](/doc/test_stack_input.jpg?raw=true "Test Stack Input Parameters")
 
 This script does not produce output values.
 
