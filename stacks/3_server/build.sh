@@ -6,10 +6,9 @@
 # Declare constants
 #
 ###############################################
-stackName=udagram-macro-stack
-macroTemplateFile=macro.yaml
-packagedTemplateFile=packaged.yaml
-s3Bucket=com-github-dstaflund-udagram-s3-bucket
+stackName=udagram-server-stack
+templateFile=file://server.yaml
+parameterFile=file://server.json
 
 
 ###############################################
@@ -19,17 +18,12 @@ s3Bucket=com-github-dstaflund-udagram-s3-bucket
 ###############################################
 create_stack()
 {
-    rm -f ${packagedTemplateFile}
-
-    aws cloudformation package \
-        --template ${macroTemplateFile} \
-        --s3-bucket ${s3Bucket} \
-        --output-template-file ${packagedTemplateFile}
-
-    aws cloudformation deploy \
+    aws cloudformation create-stack \
         --capabilities CAPABILITY_IAM \
         --stack-name ${stackName} \
-        --template-file ${packagedTemplateFile}
+        --template-body ${templateFile} \
+        --parameters ${parameterFile}
+    aws cloudformation wait stack-create-complete --stack-name udagram-server-stack
 }
 
 
@@ -42,6 +36,7 @@ delete_stack()
 {
     aws cloudformation delete-stack \
         --stack-name ${stackName}
+    aws cloudformation wait stack-delete-complete --stack-name udagram-server-stack
 }
 
 
@@ -63,18 +58,18 @@ usage()
 ###############################################
 while [[ "$1" != "" ]]; do
     case $1 in
-        -c | --create-stack )      echo "creating stack..."
-                                   create_stack
-                                   echo "done"
-                                   exit
-                                   ;;
-        -d | --delete-stack )      echo "deleting stack..."
-                                   delete_stack
-                                   echo "done"
-                                   exit
-                                   ;;
-        -h | --help )              usage
-                                   exit 1
+        -c | --create-stack )    echo "creating stack..."
+                                 create_stack
+                                 echo "done"
+                                 exit
+                                 ;;
+        -d | --delete-stack )    echo "deleting stack..."
+                                 delete_stack
+                                 echo "done"
+                                 exit
+                                 ;;
+        -h | --help )            usage
+                                 exit 1
     esac
     shift
 done

@@ -52,13 +52,13 @@ A diagram of the network is as follows:
 
 ### AWS CloudFormation Stack Structure
 
-Five AWS CloudFormation templates (two of which are optional) are used to satisfy the above requirements.
+Three AWS CloudFormation stacks are used to meet the above requirements.
 
 
 #### Service Stack
 
 This stack declares the S3 bucket that the EC2 instances download the application from.  It also declares
-the IAMS role that the EC2 instances must use to get access to the S3 bucket.
+the IAMS role that the EC2 instances must use to get access to the S3 bucket, and uploads the test application.
 
 This stack takes the following input parameters:
 
@@ -67,40 +67,6 @@ This stack takes the following input parameters:
 This script outputs the following values:
 
 ![Alt text](/doc/service_stack_output.jpg?raw=true "Service Stack Output Values")
-
-
-#### Macro Stack _(Optional)_
-
-This stack declares some AWS Lambdas that the test stack uses to upload a test application into the S3 bucket.
-
-This stack is optional and only needs to be used if you want the test stack to upload a test application for
-you.  If you wish to upload an application yourself -- and forego creation of the Macro and Test stacks --
-feel free to do so.
-
-The strategy used to perform S3 file uploads is an adaptation of code found at
-https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
-
-This stack does not consume input parameters or produce output values.
-
-
-#### Test Stack _(Optional)_
-
-This stack uses the AWS Lambdas declared in the Macro stack to upload a test application into the S3 bucket.
-
-This stack is optional and only needs to be used if you want the test stack to upload a test application for
-you.  If you wish to upload an application yourself -- and forego creation of the Macro and Test stacks --
-feel free to do so.
-
-The test application uploaded by this stack is a Base64 version of the application found in the _/test_ folder
-of this project.  The website https://www.browserling.com/tools/file-to-base64 was used to to encode the zip file.
-
-Note that the zip-file contains a single _index.html_ file that display the phrase _It works!  Udagram, Udacity._
-
-This stack takes the following input parameters:
-
-![Alt text](/doc/test_stack_input.jpg?raw=true "Test Stack Input Parameters")
-
-This script does not produce output values.
 
 
 #### Network Stack
@@ -149,33 +115,22 @@ A live link to my load balancer can be found at http://udagr-webap-j0mxb3f2v4w1-
 
 #### Creating the Stacks
 
-To create the AWS CloudFormation stacks, do the following:
+To create the AWS CloudFormation stacks, do the following _(NB:  These instructions assume you are running Linux
+with bash installed)_:
 
 1.  Create an AWS account
 1.  Download and install AWS Command Line Interface from https://aws.amazon.com/cli/
 1.  Open a command prompt and go to the top-level directory of this repository
-1.  Create the stacks by doing the following (NB:  Only Linux syntax is provided here -- modify for Windows):
+1.  Create the stacks by doing the following:
 
 ```
-    #
-    # Note that you can use '-c' instead of '--create-stack' in the following
-    #
-    
     > cd stacks
-    > cd ./1_service
-    > ./build.sh --create-stack      # Create the S3 bucket and associated role
-    > cd ../2_macro
-    > ./build.sh --create-stack      # (Optional) Create a lambda that can be used to upload files to the S3 bucket
-    > cd ../3_test
-    > ./build.sh --create-stack      # (Optional) Use lambda to upload test app to the S3 bucket
-    > cd ../4_network
-    > ./build.sh --create-stack      # Create the network infrastructure
-    > cd ../5_server
-    > ./build.sh --create-stack      # Deploying the servers, etc. onto the network
+    > ./setup.sh
 ```
 
-After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
-Stack has been created before moving onto the subsequent step.
+The script will take a while to complete.  Once it's finished, log onto the AWS Console, go to the EC2 instances
+section and wait until both of the instances are up and running before trying to view the application.
+
 
 #### Viewing the Web Application
 
@@ -185,36 +140,22 @@ with your load balancer and click on it.  It should bring you to the test applic
 
 #### Deleting the Stacks
 
-To delete the AWS CloudFormation stacks when you are finished, do the following:
+To delete the AWS CloudFormation stacks when you are finished, do the following_(NB:  These instructions assume
+you are running Linux with bash installed)_:
 
 1.  Open a command prompt and go to the top-level directory of this repository
-1.  Run the following (NB:  Only Linux syntax is provided here -- modify for Windows):
+1.  Run the following:
 
 ```
-    #
-    # Note that you can use '-d' instead of '--delete-stack' in the following
-    #
-    
     > cd stacks
-    > cd ./5_server
-    > ./build.sh --delete-stack      # Delete the servers, etc. from the network
-    > cd ../4_network
-    > ./build.sh --delete-stack      # Delete the underlying network
-    > cd ../3_test
-    > ./build.sh --delete-stack      # (Optional) Delete code used to upload test app to the S3 bucket 
-    > cd ../2_macro
-    > ./build.sh --delete-stack      # (Optional) Delete lambda that can be used to upload files to the S3 bucket
-    > cd ../1_service
-    > ./build.sh --delete-stack      # Delete the S3 bucket
+    > ./teardown.sh
 ```
 
-After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
-Stack has been created before moving onto the subsequent step.
+The stacks may take a while to be deleted, but once the script ends, you should find no reference to the
+stacks in the AWS CloudFormation console.
 
 
 ### Acknowledgments
 
-- Strategy used to perform S3 file uploads is an adaptation of code found at https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
-- Used https://www.browserling.com/tools/file-to-base64 to encode the zipfile
 - Strategy used to give EC2 instances access to the S3 bucket is taken from https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html
 

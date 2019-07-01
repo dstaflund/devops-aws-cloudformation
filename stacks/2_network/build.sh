@@ -22,20 +22,7 @@ create_stack()
         --stack-name ${stackName} \
         --template-body ${templateFile} \
         --parameters ${parameterFile}
-}
-
-
-###############################################
-#
-# Update stack
-#
-###############################################
-update_stack()
-{
-    aws cloudformation update-stack \
-        --stack-name ${stackName} \
-        --template-body ${templateFile} \
-        --parameters ${parameterFile}
+    aws cloudformation wait stack-create-complete --stack-name udagram-network-stack
 }
 
 
@@ -48,6 +35,7 @@ delete_stack()
 {
     aws cloudformation delete-stack \
         --stack-name ${stackName}
+    aws cloudformation wait stack-delete-complete --stack-name udagram-network-stack
 }
 
 
@@ -58,7 +46,7 @@ delete_stack()
 ###############################################
 usage()
 {
-    echo "usage: build.sh [[-c | --create-stack] | [-u | -- update-stack] | [-d | --delete-stack] | [-h | --help]]"
+    echo "usage: build.sh [[-c | --create-stack] | [-d | --delete-stack] | [-h | --help]]"
 }
 
 
@@ -71,11 +59,6 @@ while [[ "$1" != "" ]]; do
     case $1 in
         -c | --create-stack )    echo "creating stack..."
                                  create_stack
-                                 echo "done"
-                                 exit
-                                 ;;
-        -u | --update-stack )    echo "updating stack..."
-                                 update_stack
                                  echo "done"
                                  exit
                                  ;;
