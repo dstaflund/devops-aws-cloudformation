@@ -3,7 +3,7 @@
 ### Requirements
 
 This project contains the AWS CloudFormation templates needed to generate a networking environment
-that satisfies the following requirements.
+that meets the following requirements.
 
 #### Server specs
 
@@ -87,6 +87,7 @@ This script outputs the following values:
 
 ![Alt text](/doc/network_stack_output.jpg?raw=true "Network Stack Output Values")
 
+Note that entries in the _Values_ column will differ for each stack installation.
 
 #### Server Stack
 
@@ -97,6 +98,9 @@ The Server Stack declares the computing resources that make use of the network s
 * The instance profile
 * The target and autoscaling groups
 * The load balancer as well as its listener and rules
+
+Note that although the launch configuration can spin up to 4 servers at one time, it only spins up 2
+at the start to save on costs and resources.  More servers will be added if the load demands are there.
 
 The strategy used by this stack of having EC2 instances use instance profiles to access the S3 bucket is
 an adaptation of code found https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html
@@ -109,7 +113,10 @@ This script outputs the following values:
 
 ![Alt text](/doc/server_stack_output.jpg?raw=true "Server Stack Output Values")
 
-A live link to my load balancer can be found at http://udagr-webap-j0mxb3f2v4w1-2025708013.us-west-2.elb.amazonaws.com/
+Note that entries in the _Values_ column will differ for each stack installation.
+
+A live link to my load balancer can be found at http://udagr-WebAp-1CIRFFVXGZSQ6-889163088.us-west-2.elb.amazonaws.com/
+
 
 ### Instructions
 
@@ -140,8 +147,7 @@ with your load balancer and click on it.  It should bring you to the test applic
 
 #### Deleting the Stacks
 
-To delete the AWS CloudFormation stacks when you are finished, do the following_(NB:  These instructions assume
-you are running Linux with bash installed)_:
+To delete the AWS CloudFormation stacks when you are finished, do the following:
 
 1.  Open a command prompt and go to the top-level directory of this repository
 1.  Run the following:
