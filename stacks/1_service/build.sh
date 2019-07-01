@@ -37,7 +37,6 @@ create_stack()
 delete_stack()
 {
     aws s3 rm s3://com-github-dstaflund-udagram-s3-bucket/working-test.zip
-    aws s3api wait bucket-not-exists --bucket com-github-dstaflund-udagram-s3-bucket
     aws cloudformation delete-stack \
         --stack-name ${stackName}
     aws cloudformation wait stack-delete-complete --stack-name udagram-service-stack
