@@ -165,19 +165,22 @@ To create the AWS CloudFormation stacks, do the following:
     > cd ./1_service
     > ./build.sh --create-stack      # Create the S3 bucket and associated role
     > cd ../2_macro
-    > ./build.sh --create-stack      # Create the underlying network resources
+    > ./build.sh --create-stack      # (Optional) Create a lambda that can be used to upload files to the S3 bucket
     > cd ../3_test
-    > ./build.sh --create-stack      # Create the instances and deploy the app
+    > ./build.sh --create-stack      # (Optional) Use lambda to upload test app to the S3 bucket
     > cd ../4_network
-    > ./build.sh --create-stack      # Create the instances and deploy the app
+    > ./build.sh --create-stack      # Create the network infrastructure
     > cd ../5_server
-    > ./build.sh --create-stack      # Create the instances and deploy the app
+    > ./build.sh --create-stack      # Deploying the servers, etc. onto the network
 ```
 
 After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
 Stack has been created before moving onto the subsequent step.
 
 #### Viewing the Web Application
+
+Once the stacks have been deployed and the EC2 instances are running, find the public link associated
+with your load balancer and click on it.  It should bring you to the test application page.
 
 
 #### Deleting the Stacks
@@ -194,15 +197,15 @@ To delete the AWS CloudFormation stacks when you are finished, do the following:
     
     > cd stacks
     > cd ./5_server
-    > ./build.sh --delete-stack      # Delete the instances
+    > ./build.sh --delete-stack      # Delete the servers, etc. from the network
     > cd ../4_network
-    > ./build.sh --delete-stack      # Delete the underlying network resources
+    > ./build.sh --delete-stack      # Delete the underlying network
     > cd ../3_test
-    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+    > ./build.sh --delete-stack      # (Optional) Delete code used to upload test app to the S3 bucket 
     > cd ../2_macro
-    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+    > ./build.sh --delete-stack      # (Optional) Delete lambda that can be used to upload files to the S3 bucket
     > cd ../1_service
-    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+    > ./build.sh --delete-stack      # Delete the S3 bucket
 ```
 
 After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
