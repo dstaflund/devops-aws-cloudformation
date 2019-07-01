@@ -62,7 +62,11 @@ the IAMS role that the EC2 instances must use to get access to the S3 bucket.
 
 This stack takes the following input parameters:
 
+![Alt text](/doc/service_stack_input.jpg?raw=true "Service Stack Input Parameters")
+
 This script outputs the following values:
+
+![Alt text](/doc/service_stack_output.jpg?raw=true "Service Stack Output Values")
 
 
 #### Macro Stack _(Optional)_
@@ -76,9 +80,7 @@ feel free to do so.
 The strategy used to perform S3 file uploads is an adaptation of code found at
 https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
 
-This stack takes the following input parameters:
-
-This script outputs the following values:
+This stack does not consume input parameters or produce output values.
 
 
 #### Test Stack _(Optional)_
@@ -96,7 +98,9 @@ Note that the zip-file contains a single _index.html_ file that display the phra
 
 This stack takes the following input parameters:
 
-This script outputs the following values:
+![Alt text](/doc/service_test_input.jpg?raw=true "Test Stack Input Parameters")
+
+This script does not produce output values.
 
 
 #### Network Stack
@@ -111,7 +115,12 @@ The Network stack declares the following resources of this network:
 
 This stack takes the following input parameters:
 
+![Alt text](/doc/network_stack_input.jpg?raw=true "Network Stack Input Parameters")
+
 This script outputs the following values:
+
+![Alt text](/doc/network_stack_output.jpg?raw=true "Network Stack Output Values")
+
 
 #### Server Stack
 
@@ -128,8 +137,13 @@ an adaptation of code found https://docs.aws.amazon.com/IAM/latest/UserGuide/id_
 
 This stack takes the following input parameters:
 
+![Alt text](/doc/server_stack_input.jpg?raw=true "Server Stack Input Parameters")
+
 This script outputs the following values:
 
+![Alt text](/doc/server_stack_output.jpg?raw=true "Server Stack Output Values")
+
+A live link to my load balancer can be found at http://udagr-webap-j0mxb3f2v4w1-2025708013.us-west-2.elb.amazonaws.com/
 
 ### Instructions
 
