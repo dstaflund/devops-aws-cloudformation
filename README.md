@@ -7,7 +7,7 @@ that satisfies the following requirements.
 
 #### Server specs
 
-- There are to be two private subnets each containing up to two servers
+- There are two private subnets each containing up to two servers
 - Each server is to have two vCPUs and at least 4GB of RAM
 - Each server is to use Ubuntu 18
 - Each server is to have at least 10GB of disk space allocated
@@ -16,7 +16,7 @@ that satisfies the following requirements.
 #### Security Groups and Roles
 
 - The instances must use IAM Roles to use the S3 Service
-- The application must communicate on HTTP port 80 so servers will need this inbound port open
+- Inbound HTTP port 80 is open that that applications can communicate on it
 - Servers must have unrestricted outbound internet access to download and update software
 
 
