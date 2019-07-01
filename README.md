@@ -1,72 +1,172 @@
 ## AWS CloudFormation Project    
 
-### Requirements ###
+### Requirements
 
-**Server specs**
+This project contains the AWS CloudFormation templates needed to generate a networking environment
+that satisfies the following requirements.
 
-- There are to be two private subnets each containing two of the above servers
+#### Server specs
+
+- There are to be two private subnets each containing up to two servers
 - Each server is to have two vCPUs and at least 4GB of RAM
 - Each server is to use Ubuntu 18
 - Each server is to have at least 10GB of disk space allocated
-- _(Optional)_ There should be a bastion host to allow you to SSH into your private subnet servers.
 
 
-**Security Groups and Roles**
+#### Security Groups and Roles
 
 - The instances must use IAM Roles to use the S3 Service
 - The application must communicate on HTTP port 80 so servers will need this inbound port open
 - Servers must have unrestricted outbound internet access to download and update software
-- _(Optional)_ The bastion host should be on a public subnet with port 22 open only to your home IP address
-- _(Optional)_ The bastion host should have a private key to access the other servers.
 
 
-**Load Balancing**
+#### Load Balancing
 
 - A load balancer must distribute calls to each of the servers
-- The load balancer must also perform health checks
+- The load balancer must perform health checks
 - The load balancer health check must accommodate build and startup times
 - The load balancer must allow all public traffic (0.0.0.0/0) on port 80 inbound
 - The load balancer must only use port 80 to reach the internal servers
 - The load balancer must be located in a public subnet
 
 
-**Launch Configuration**
+#### Launch Configuration
 
-- There is to be a Launch Configuration that deploys an application to four servers
+- There is to be a Launch Configuration that deploys an application to up to four servers
 - The application to be deployed must be downloaded from an S3 bucket
-- Log information for UserData scripts must be located in _cloud-init-output.log_ under the folder _/var/log_
 - The provided UserData script must install all the required application dependencies
 
 
-**CloudFormation Scripts**
+#### CloudFormation Scripts
 
 - One of the output exports of the CloudFormation script should be the public URL of the load balancer
 - The script must automate the creation and destruction of the entire infrastructure
 - The script should make judicious use of parameters
 
+#### Networking Diagram
+
+A diagram of the network is as follows:
+
+![Alt text](/doc/udagram-network.png?raw=true "Network Diagram")
+
+
+### AWS CloudFormation Stack Structure
+
+Five AWS CloudFormation templates (two of which are optional) are used to satisfy the above requirements.
+
+
+#### Service Stack
+
+This stack declares the S3 bucket that the EC2 instances download the application from.  It also declares
+the IAMS role that the EC2 instances must use to get access to the S3 bucket.
+
+This stack takes the following input parameters:
+
+This script outputs the following values:
+
+
+#### Macro Stack _(Optional)_
+
+This stack declares some AWS Lambdas that the test stack uses to upload a test application into the S3 bucket.
+
+This stack is optional and only needs to be used if you want the test stack to upload a test application for
+you.  If you wish to upload an application yourself -- and forego creation of the Macro and Test stacks --
+feel free to do so.
+
+The strategy used to perform S3 file uploads is an adaptation of code found at
+https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
+
+This stack takes the following input parameters:
+
+This script outputs the following values:
+
+
+#### Test Stack _(Optional)_
+
+This stack uses the AWS Lambdas declared in the Macro stack to upload a test application into the S3 bucket.
+
+This stack is optional and only needs to be used if you want the test stack to upload a test application for
+you.  If you wish to upload an application yourself -- and forego creation of the Macro and Test stacks --
+feel free to do so.
+
+The test application uploaded by this stack is a Base64 version of the application found in the _/test_ folder
+of this project.  The website https://www.browserling.com/tools/file-to-base64 was used to to encode the zip file.
+
+Note that the zip-file contains a single _index.html_ file that display the phrase _It works!  Udagram, Udacity._
+
+This stack takes the following input parameters:
+
+This script outputs the following values:
+
+
+#### Network Stack
+
+The Network stack declares the following resources of this network:
+
+* The AWS Virtual Private Cloud (VPC)
+* The Internet Gateway
+* The public and private subnets
+* The NAT Gateways
+* The routing tables
+
+This stack takes the following input parameters:
+
+This script outputs the following values:
+
+#### Server Stack
+
+The Server Stack declares the computing resources that make use of the network stack:
+
+* The webapp and load balancer security groups
+* The launch configuration
+* The instance profile
+* The target and autoscaling groups
+* The load balancer as well as its listener and rules
+
+The strategy used by this stack of having EC2 instances use instance profiles to access the S3 bucket is
+an adaptation of code found https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html
+
+This stack takes the following input parameters:
+
+This script outputs the following values:
+
 
 ### Instructions
+
+#### Creating the Stacks
 
 To create the AWS CloudFormation stacks, do the following:
 
 1.  Create an AWS account
 1.  Download and install AWS Command Line Interface from https://aws.amazon.com/cli/
 1.  Open a command prompt and go to the top-level directory of this repository
-1.  Run the following (NB:  Only Linux syntax is provided here -- modify for Windows):
+1.  Create the stacks by doing the following (NB:  Only Linux syntax is provided here -- modify for Windows):
 
 ```
     #
     # Note that you can use '-c' instead of '--create-stack' in the following
     #
     
-    > cd scripts
-    > cd ./service
+    > cd stacks
+    > cd ./1_service
     > ./build.sh --create-stack      # Create the S3 bucket and associated role
-    > cd ../network
+    > cd ../2_macro
     > ./build.sh --create-stack      # Create the underlying network resources
-    > cd ../server
+    > cd ../3_test
+    > ./build.sh --create-stack      # Create the instances and deploy the app
+    > cd ../4_network
+    > ./build.sh --create-stack      # Create the instances and deploy the app
+    > cd ../5_server
     > ./build.sh --create-stack      # Create the instances and deploy the app
 ```
+
+After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
+Stack has been created before moving onto the subsequent step.
+
+#### Viewing the Web Application
+
+
+#### Deleting the Stacks
 
 To delete the AWS CloudFormation stacks when you are finished, do the following:
 
@@ -78,16 +178,26 @@ To delete the AWS CloudFormation stacks when you are finished, do the following:
     # Note that you can use '-d' instead of '--delete-stack' in the following
     #
     
-    > cd scripts
-    > cd ./server
+    > cd stacks
+    > cd ./5_server
     > ./build.sh --delete-stack      # Delete the instances
-    > cd ../network
+    > cd ../4_network
     > ./build.sh --delete-stack      # Delete the underlying network resources
-    > cd ../service
+    > cd ../3_test
+    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+    > cd ../2_macro
+    > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
+    > cd ../1_service
     > ./build.sh --delete-stack      # Delete the S3 bucket and associated role
 ```
+
+After you run each step, log onto the AWS Console, go to the CloudFormation section, and wait until the
+Stack has been created before moving onto the subsequent step.
+
 
 ### Acknowledgments
 
 - Strategy used to perform S3 file uploads is an adaptation of code found at https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/CloudFormation/MacrosExamples/S3Objects
-- Used https://www.browserling.com/tools/file-to-base64 to encode the warfile
+- Used https://www.browserling.com/tools/file-to-base64 to encode the zipfile
+- Strategy used to give EC2 instances access to the S3 bucket is taken from https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html
+
